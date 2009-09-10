@@ -1,0 +1,189 @@
+ifeq (@(NCURSES),y)
+include_rules
+
+LDFLAGS_make_hash += -ldl
+LDFLAGS_make_keys += -ldl
+
+!ncurses_host = |> ^ HOSTCC %o^ gcc -o %o $(CFLAGS) -DMAIN_PROGRAM %f $(LDFLAGS_%o) |>
+
+: tinfo/MKcodes.awk ../include/Caps |> ^ GEN %o^ gawk -f ./tinfo/MKcodes.awk bigstrings=1 ./../include/Caps > %o |> codes.c
+: tinfo/comp_hash.c | ../include/*.h |> !ncurses_host |> make_hash
+: tinfo/MKcaptab.sh tinfo/MKcaptab.awk ../include/Caps make_hash |> ^ GEN %o^ sh -e ./tinfo/MKcaptab.sh gawk 1 tinfo/MKcaptab.awk ../include/Caps > %o |> comp_captab.c
+: tty/MKexpanded.sh | ../include/*.h |> ^ GEN %o^ sh -e ./tty/MKexpanded.sh "gcc -E" -DHAVE_CONFIG_H -I../ncurses -I. -I. -I../include  -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64  -DNDEBUG > %o |> expanded.c
+: tinfo/MKfallback.sh |> ^ GEN %o^ sh -e ./tinfo/MKfallback.sh /usr/share/terminfo ../misc/terminfo.src > %o |> fallback.c
+: base/MKlib_gen.sh ../include/curses.h ../include/ncurses_def.h ../include/unctrl.h |> ^ GEN %o^ sh -e ./base/MKlib_gen.sh "gcc -E -DHAVE_CONFIG_H -I../ncurses -I. -I. -I../include  -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64  -DNDEBUG" "gawk" generated <../include/curses.h > %o |> lib_gen.c
+: tinfo/MKkeys_list.sh ../include/Caps |> ^ GEN %o^ AWK=gawk sh ./tinfo/MKkeys_list.sh ../include/Caps | sort > %o |> keys.list
+: base/MKkeyname.awk keys.list |> ^ GEN %o^ gawk -f ./base/MKkeyname.awk bigstrings=1 keys.list > %o |> lib_keyname.c
+: tinfo/MKnames.awk ../include/Caps |> ^ GEN %o^ gawk -f ./tinfo/MKnames.awk bigstrings=1 ./../include/Caps > %o |> names.c
+: base/MKunctrl.awk |> ^ GEN %o^ echo | gawk -f ./base/MKunctrl.awk bigstrings=1 > %o |> unctrl.c
+: tinfo/make_keys.c | ../include/*.h names.c |> !ncurses_host |> make_keys
+: make_keys keys.list |> ^ GEN %o^ ./make_keys keys.list > %o |> init_keytry.h
+
+# I tried to wildcard these, but at least base/ has extra files (or at least,
+# an extra one - sigaction.c) that don't compile and aren't needed. Not sure
+# why they're there.
+
+input += tty/hardscroll.c
+input += tty/hashmap.c
+input += base/lib_addch.c
+input += base/lib_addstr.c
+input += base/lib_beep.c
+input += base/lib_bkgd.c
+input += base/lib_box.c
+input += base/lib_chgat.c
+input += base/lib_clear.c
+input += base/lib_clearok.c
+input += base/lib_clrbot.c
+input += base/lib_clreol.c
+input += base/lib_color.c
+input += base/lib_colorset.c
+input += base/lib_delch.c
+input += base/lib_delwin.c
+input += base/lib_echo.c
+input += base/lib_endwin.c
+input += base/lib_erase.c
+input += base/lib_flash.c
+input += lib_gen.c
+input += base/lib_getch.c
+input += base/lib_getstr.c
+input += base/lib_hline.c
+input += base/lib_immedok.c
+input += base/lib_inchstr.c
+input += base/lib_initscr.c
+input += base/lib_insch.c
+input += base/lib_insdel.c
+input += base/lib_insnstr.c
+input += base/lib_instr.c
+input += base/lib_isendwin.c
+input += base/lib_leaveok.c
+input += base/lib_mouse.c
+input += base/lib_move.c
+input += tty/lib_mvcur.c
+input += base/lib_mvwin.c
+input += base/lib_newterm.c
+input += base/lib_newwin.c
+input += base/lib_nl.c
+input += base/lib_overlay.c
+input += base/lib_pad.c
+input += base/lib_printw.c
+input += base/lib_redrawln.c
+input += base/lib_refresh.c
+input += base/lib_restart.c
+input += base/lib_scanw.c
+input += base/lib_screen.c
+input += base/lib_scroll.c
+input += base/lib_scrollok.c
+input += base/lib_scrreg.c
+input += base/lib_set_term.c
+input += base/lib_slk.c
+input += base/lib_slkatr_set.c
+input += base/lib_slkatrof.c
+input += base/lib_slkatron.c
+input += base/lib_slkatrset.c
+input += base/lib_slkattr.c
+input += base/lib_slkclear.c
+input += base/lib_slkcolor.c
+input += base/lib_slkinit.c
+input += base/lib_slklab.c
+input += base/lib_slkrefr.c
+input += base/lib_slkset.c
+input += base/lib_slktouch.c
+input += base/lib_touch.c
+input += trace/lib_tracedmp.c
+input += trace/lib_tracemse.c
+input += tty/lib_tstp.c
+input += base/lib_ungetch.c
+input += tty/lib_vidattr.c
+input += base/lib_vline.c
+input += base/lib_wattroff.c
+input += base/lib_wattron.c
+input += base/lib_winch.c
+input += base/lib_window.c
+input += base/nc_panel.c
+input += base/safe_sprintf.c
+input += tty/tty_update.c
+input += trace/varargs.c
+input += base/memmove.c
+input += base/vsscanf.c
+input += base/lib_freeall.c
+input += expanded.c
+input += base/legacy_coding.c
+input += base/lib_dft_fgbg.c
+input += tinfo/lib_print.c
+input += base/resizeterm.c
+input += trace/trace_xnames.c
+input += tinfo/use_screen.c
+input += base/use_window.c
+input += base/wresize.c
+input += tinfo/access.c
+input += tinfo/add_tries.c
+input += tinfo/alloc_ttype.c
+input += codes.c
+input += tinfo/comp_error.c
+input += tinfo/db_iterator.c
+input += tinfo/doalloc.c
+input += tinfo/entries.c
+input += fallback.c
+input += tinfo/free_ttype.c
+input += tinfo/getenv_num.c
+input += tinfo/home_terminfo.c
+input += tinfo/init_keytry.c
+input += tinfo/lib_acs.c
+input += tinfo/lib_baudrate.c
+input += tinfo/lib_cur_term.c
+input += tinfo/lib_data.c
+input += tinfo/lib_has_cap.c
+input += tinfo/lib_kernel.c
+input += lib_keyname.c
+input += tinfo/lib_longname.c
+input += tinfo/lib_napms.c
+input += tinfo/lib_options.c
+input += tinfo/lib_raw.c
+input += tinfo/lib_setup.c
+input += tinfo/lib_termcap.c
+input += tinfo/lib_termname.c
+input += tinfo/lib_tgoto.c
+input += tinfo/lib_ti.c
+input += tinfo/lib_tparm.c
+input += tinfo/lib_tputs.c
+input += trace/lib_trace.c
+input += trace/lib_traceatr.c
+input += trace/lib_tracechr.c
+input += tinfo/lib_ttyflags.c
+input += tty/lib_twait.c
+input += tinfo/name_match.c
+input += names.c
+input += tinfo/read_entry.c
+input += tinfo/read_termcap.c
+input += tinfo/setbuf.c
+input += tinfo/strings.c
+input += base/tries.c
+input += tinfo/trim_sgr0.c
+input += unctrl.c
+input += trace/visbuf.c
+input += tinfo/alloc_entry.c
+input += tinfo/captoinfo.c
+input += comp_captab.c
+input += tinfo/comp_expand.c
+input += tinfo/comp_hash.c
+input += tinfo/comp_parse.c
+input += tinfo/comp_scan.c
+input += tinfo/parse_entry.c
+input += tinfo/write_entry.c
+input += base/define_key.c
+input += tinfo/hashed_db.c
+input += base/key_defined.c
+input += base/keybound.c
+input += base/keyok.c
+input += base/version.c
+
+# TODO: shared library support? - also use my gcc, not the host
+#: foreach $(input) | ../include/*.h init_keytry.h |> ^ CC %f^ gcc -DHAVE_CONFIG_H -DHAVE_STRDUP=1 -I. -I../include -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -DNDEBUG -O2 --param max-inline-insns-single=1200 -fPIC -c %f -o %o |> %B.o
+#: *.o |> ^ LD %o^ gcc -O2 --param max-inline-insns-single=1200 -shared -Wl,-soname,libncurses.so.@(NCURSES_MAJOR),-stats,-lc -o %o %f |> libncurses.so.@(NCURSES_MAJOR).@(NCURSES_MINOR)
+#: libncurses.so.@(NCURSES_MAJOR).@(NCURSES_MINOR) |> ln -sf %f %o |> libncurses.so.@(NCURSES_MAJOR)
+#: libncurses.so.@(NCURSES_MAJOR) |> ln -sf %f %o |> libncurses.so
+
+: foreach $(input) | ../include/*.h init_keytry.h |> !cc |> %B.o
+: *.o |> !ar |> libncurses.a
+
+endif

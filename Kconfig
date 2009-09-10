@@ -1,0 +1,195 @@
+config NCURSES
+	bool "ncurses"
+	help
+	  http://freshmeat.net/projects/ncurses/ says: 
+	  The ncurses (new curses) library is a freeware emulation of System V
+	  Release 4.0 curses. It uses terminfo format, supports pads and color
+	  and multiple highlights and forms characters and function-key
+	  mapping, and has all the other SYSV-curses enhancements over BSD
+	  curses. The distribution includes the library and support utilities,
+	  including a terminfo compiler tic, a decompiler infocmp, clear, tput,
+	  tset, and a termcap conversion tool captoinfo. Full manual pages are
+	  provided for the library and tools. 
+
+	  Say Y unless you really don't want ncurses. Nethack uses ncurses.
+
+if NCURSES
+menu "ncurses autoconf options"
+config NCURSES_MAJOR
+	int "Major version"
+	default 5
+	help
+	  The major version number of ncurses. No idea why this is in autoconf.
+config NCURSES_MINOR
+	int "Minor version"
+	default 7
+	help
+	  The minor version number of ncurses. No idea why this is in autoconf.
+config NCURSES_PATCH
+	int "Patch level"
+	default 20081102
+	help
+	  The patch level of ncurses. No idea why this is in autoconf.
+config NCURSES_MOUSE_VERSION
+	int "Mouse version (1 or 2)"
+	default 1
+	help
+	  Defaults to 1, can be set to 2 in configure with --enable-ext-mouse.
+	  No idea what it does.
+config cf_cv_header_stdbool_h
+	int "cf_cv_header_stdbool_h"
+	default 1
+	help
+	  Something about including stdbool.h
+config NCURSES_CONST
+	string "const"
+	default "/* nothing */"
+	help
+	  Something about const.
+config NCURSES_INLINE
+	string "inline"
+	default "inline"
+	help
+	  Use the standard keywords, people.
+config cf_cv_enable_opaque
+	string "cf_cv_enable_opaque"
+	default "NCURSES_OPAQUE"
+	help
+	  It looks like you could set this to NCURSES_INTERNALS if
+	  cf_cv_enable_reentrant is 1. I don't know why autoconf sets four
+	  variables based on this.
+config NCURSES_OPAQUE
+	int "NCURSES_OPAQUE"
+	default 0
+	help
+	  More fun from cf_cv_enable_reentrant. It looks like NCURSES_OPAQUE is
+	  always set to the same value as that. Of course we need two variables
+	  set to the same value to make sure. One of them could always be hit
+	  by a cosmic ray. And then what? Hmm??? Exactly.
+config NCURSES_SIZE_T
+	string "NCURSES_SIZE_T"
+	default "short"
+	help
+	  Can't just use size_t for size_t. Gotta use short. From autoconf.
+config NCURSES_TPARM_VARARGS
+	int "tparm_varargs"
+	default 1
+	help
+	  Yep.
+config NCURSES_CH_T
+	string "ch_t"
+	default "chtype"
+	help
+	  What's a chtype?
+config cf_cv_enable_lp64
+	int "cf_cv_enable_lp64"
+	default 0
+	help
+	  Something about 64 somethings.
+config cf_cv_typeof_chtype
+	string "cf_cv_typeof_chtype"
+	default "long"
+	help
+	  Oh, a chtype is just a long.
+config cf_cv_typeof_mmask_t
+	string "cf_cv_typeof_mmask_t"
+	default "long"
+	help
+	  So a chtype is the same as a mmask?
+config cf_cv_type_of_bool
+	string "cf_cv_type_of_bool"
+	default "unsigned char"
+	help
+	  Naturally we need our own bool.
+config USE_CXX_BOOL
+	string "USE_CXX_BOOL"
+	default "defined(__cplusplus)"
+	help
+	  Should we use C++? No. No we shouldn't.
+config NCURSES_SBOOL
+	string "NCURSES_BOOL"
+	default "char"
+	help
+	  More bool defines!
+config NCURSES_XNAMES
+	int "NCURSES_XNAMES"
+	default 1
+	help
+	  X-treme NAMES!
+config BROKEN_LINKER
+	int "Broken linker"
+	default 0
+	help
+	  Why would we want to link with a broken linker? Silly.
+config NCURSES_LIBUTF8
+	int "libutf8"
+	default 0
+	help
+	  Something about libutf8.
+config NEED_WCHAR_H
+	int "NEED_WCHAR_H"
+	default 0
+	help
+	  Do we need wchar.h? I guess not.
+config NCURSES_WCHAR_T
+	int "NCURSES_WCHAR_T"
+	default 0
+	help
+	  Uhhh.
+config NCURSES_OK_WCHAR_T
+	string "NCURSES_OK_WCHAR_T"
+	default ""
+	help
+	  Kinda like before, but more OK now.
+config NCURSES_WINT_T
+	int "NCURSES_WINT_T"
+	default 0
+	help
+	  Yep.
+config NCURSES_EXT_COLORS
+	int "NCURSES_EXT_COLORS"
+	default 0
+	help
+	  Ext colors. I guess they suck.
+config NCURSES_EXT_FUNCS
+	int "NCURSES_EXT_FUNCS"
+	default 1
+	help
+	  Ext funcs, however, rule.
+config NCURSES_OSPEED
+	string "NCURSES_OSPEED"
+	default "short"
+	help
+	  Speeeeeeeeedy.
+config cf_cv_1UL
+	string "cf_cv_1UL"
+	default "1UL"
+	help
+	  Let's just use standards, people.
+config cf_cv_enable_reentrant
+	int "cf_cv_enable_reentrant"
+	default 0
+	help
+	  Something about reentrancy.
+config HAVE_VSSCANF
+	string "HAVE_VSSCANF"
+	default 1
+	help
+	  Do we have vsscanf??? Yes!!
+config HAVE_TERMIOS_H
+	string "HAVE_TERMIOS_H"
+	default 1
+	help
+	  Do we have termios.h??? Yes!!
+config HAVE_TERMIO_H
+	string "HAVE_TERMIO_H"
+	default 1
+	help
+	  Let's check again...but this time *without* the 's'.
+config HAVE_TCGETATTR
+	string "HAVE_TCGETATTR"
+	default 1
+	help
+	  Do we have tcgetattr??? Yes!!
+endmenu
+endif

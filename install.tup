@@ -1,0 +1,12 @@
+ifeq (@(NCURSES),y)
+ncurses_install += $(TUP_CWD)/progs/clear
+ncurses_install += $(TUP_CWD)/progs/tic
+ncurses_install += $(TUP_CWD)/progs/toe
+ncurses_install += $(TUP_CWD)/progs/tput
+ncurses_install += $(TUP_CWD)/progs/tset
+ncurses_install += $(TUP_CWD)/progs/infocmp
+: foreach $(ncurses_install) |> ^ INSTALL %o^ rm -f %o; cp %f %o |> %b
+: tic |> ^ LN %f %o^ ln -sf %f %o |> captoinfo
+: tic |> ^ LN %f %o^ ln -sf %f %o |> infotocap
+: tset |> ^ LN %f %o^ ln -sf %f %o |> reset
+endif

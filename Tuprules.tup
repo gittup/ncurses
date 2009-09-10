@@ -1,0 +1,10 @@
+CFLAGS += -DHAVE_CONFIG_H
+CFLAGS += -I$(TUP_CWD)/ncurses
+CFLAGS += -I.
+CFLAGS += -I$(TUP_CWD)/include
+CFLAGS += -D_GNU_SOURCE
+CFLAGS += -D_FILE_OFFSET_BITS=64
+CFLAGS += -DNDEBUG
+CFLAGS += --param max-inline-insns-single=1200
+CFLAGS += -fPIC
+CFLAGS += -I$(LINUX_ROOT)/include -I$(LINUX_ROOT)/arch/@(ARCH)/include

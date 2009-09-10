@@ -1,0 +1,12 @@
+ifeq (@(NCURSES),y)
+.gitignore
+, curses.h.in |> curses.head
+, MKterm.h.awk.in |> MKterm.h.awk
+, termcap.h.in |> termcap.h
+, unctrl.h.in |> unctrl.h
+: curses.head |> ^ GEN %o^ (cat curses.head && AWK=gawk sh ./MKkey_defs.sh ./Caps && cat ./curses.tail) > %o |> curses.h
+: MKhashsize.sh Caps |> ^ GEN %o^ sh ./MKhashsize.sh ./Caps > %o |> hashsize.h
+: MKncurses_def.sh ncurses_defs |> ^ GEN %o^ AWK=gawk sh ./MKncurses_def.sh ./ncurses_defs > %o |> ncurses_def.h
+: MKparametrized.sh Caps |> ^ GEN %o^ AWK=gawk sh ./MKparametrized.sh ./Caps > %o |> parametrized.h
+: MKterm.h.awk Caps edit_cfg.sh ncurses_cfg.h |> ^ GEN %o^ gawk -f MKterm.h.awk ./Caps > %o && sh ./edit_cfg.sh ncurses_cfg.h %o |> term.h
+endif

@@ -1,0 +1,15 @@
+ifeq (@(NCURSES),y)
+include_rules
+
+srcs = clear.c infocmp.c tic.c toe.c tput.c tset.c dump_entry.c
+objs = clear.o toe.o tput.o tset.o
+
+LDFLAGS += ../ncurses/libncurses.a
+
+: MKtermsort.sh ../include/Caps |> ^ GEN %o^ sh ./MKtermsort.sh gawk ../include/Caps > %o |> termsort.c
+: |> ^ GEN %o^ (echo '#define PROG_CAPTOINFO "captoinfo"'; echo '#define PROG_INFOTOCAP "infotocap"'; echo '#define PROG_RESET     "reset"'; echo '#define PROG_INIT      "init"') > %o |> transform.h
+: foreach $(srcs) | transform.h termsort.c ../include/*.h |> !cc |> %B.o
+: foreach $(objs) | ../ncurses/libncurses.a |> !ld |> %B
+: tic.o dump_entry.o | ../ncurses/libncurses.a |> !ld |> tic
+: infocmp.o dump_entry.o | ../ncurses/libncurses.a |> !ld |> infocmp
+endif
