@@ -1,9 +1,9 @@
 ifeq (@(NCURSES),y)
 .gitignore
-: curses.h.in |> tup-varsed %f %o |> curses.head
-: MKterm.h.awk.in |> tup-varsed %f %o |> MKterm.h.awk
-: termcap.h.in |> tup-varsed %f %o |> termcap.h
-: unctrl.h.in |> tup-varsed %f %o |> unctrl.h
+: curses.h.in |> tup varsed %f %o |> curses.head
+: MKterm.h.awk.in |> tup varsed %f %o |> MKterm.h.awk
+: termcap.h.in |> tup varsed %f %o |> termcap.h
+: unctrl.h.in |> tup varsed %f %o |> unctrl.h
 : curses.head |> ^ GEN %o^ (cat curses.head && AWK=gawk sh ./MKkey_defs.sh ./Caps && cat ./curses.tail) > %o |> curses.h
 : MKhashsize.sh Caps |> ^ GEN %o^ sh ./MKhashsize.sh ./Caps > %o |> hashsize.h
 : MKncurses_def.sh ncurses_defs |> ^ GEN %o^ AWK=gawk sh ./MKncurses_def.sh ./ncurses_defs > %o |> ncurses_def.h
