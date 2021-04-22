@@ -7,7 +7,7 @@ ncurses_install += $(TUP_CWD)/progs/tset
 ncurses_install += $(TUP_CWD)/progs/infocmp
 ncurses_install += $(TUP_CWD)/misc/terminfo.src
 : foreach $(ncurses_install) |> !cp |> %b
-: tic |> !ln |> captoinfo
-: tic |> !ln |> infotocap
-: tset |> !ln |> reset
+: tic |> !tup_ln |> captoinfo
+: tic |> !tup_ln |> infotocap
+: tset |> !tup_ln |> reset
 endif
