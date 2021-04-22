@@ -6,8 +6,8 @@ ncurses_install += $(TUP_CWD)/progs/tput
 ncurses_install += $(TUP_CWD)/progs/tset
 ncurses_install += $(TUP_CWD)/progs/infocmp
 ncurses_install += $(TUP_CWD)/misc/terminfo.src
-: foreach $(ncurses_install) |> !cp |> %b
-: tic |> !tup_ln |> captoinfo
-: tic |> !tup_ln |> infotocap
-: tset |> !tup_ln |> reset
+: foreach $(ncurses_install) |> !cp |> %b | $(GITTUP_ROOT)/<initrd>
+: tic |> !tup_ln |> captoinfo | $(GITTUP_ROOT)/<initrd>
+: tic |> !tup_ln |> infotocap | $(GITTUP_ROOT)/<initrd>
+: tset |> !tup_ln |> reset | $(GITTUP_ROOT)/<initrd>
 endif
